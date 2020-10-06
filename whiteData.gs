@@ -45,7 +45,7 @@ function WhiteData(member, totalContents) {
   const goHome  = [ '', '24H', '当番', '外出' ]; // 帰宅判定
   
   
-  // 出社時の当日の情報
+  // 出社時に当日の在席状態を書込
   if ( nowTime < 10 ) {
     
     // 予定無し ・ 24H ・ 当番 の場合、 「在席」を書込
@@ -67,7 +67,7 @@ function WhiteData(member, totalContents) {
   };
   
 
-  // 帰宅時の翌日の情報
+  // 帰宅時に翌日の在席状態を書込
   if ( nowTime > 16 ) {
     
     // 予定無し ・ 24H ・ 当番 ・ 外出 の場合、 在席リストの状態が外出中でなければ、「帰宅」 を書込
@@ -77,12 +77,25 @@ function WhiteData(member, totalContents) {
        };
     });
 
-    // 外出の場合、 「外出」を書込
+    // 外出の場合、「外出」を書込
     if ( nextGoOut )        setContents = attendList.getRange(rowNum, 5, 1, 1).setValue('外出中');
     
     // 出張の場合、「出張」を書込
     if ( nextBusinessTrip ) setContents = attendList.getRange(rowNum, 5, 1, 1).setValue('出張中');
   
   };
+
+
+// 取得した詳細情報を書込 //
+  let detail; // 直近の予定
+
+  // 本日の予定が 外出 ・ 出張 の場合、予定表の内容を書込
+  if ( goOut || businessTrip ) detail = attendList.getRange(rowNum, 6, 1, 1).setValue(contents);
+
+  // 本日の予定が 休日 の場合、予定表の内容を書込
+  if ( holidayJudg ) detail = attendList.getRange(rowNum, 6, 1, 1).setValue(contents);
+
+
+
 
 }
