@@ -37,7 +37,7 @@ function WhiteData(member, totalContents) {
   
   // 土曜 ・ 日曜 ・ 休日判定
   const holidayJudg = holiday1 || holiday2 || holiday3 || holiday4 || holiday5; // 休日判定(trueで休日)
-  const saturday = dayOfNum === 2;       // 土曜日判定
+  const saturday = dayOfNum === 6;       // 土曜日判定
   const sunday   = dayOfNum === 0;       // 日曜日判定
   
   // 在席 ・ 帰宅判定
@@ -46,7 +46,7 @@ function WhiteData(member, totalContents) {
   
   
   // 出社時の当日の情報
-  if ( nowTime > 10 ) {
+  if ( nowTime < 10 ) {
     
     // 予定無し ・ 24H ・ 当番 の場合、 「在席」を書込
     attend.forEach( el => {
