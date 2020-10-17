@@ -1,6 +1,6 @@
-/**********************************/
+/***********************************/
 /***   指定したメンバーの予定を取得   ***/
-/**********************************/
+/***********************************/
 function ReadData(member) {
   
   // スプレットシートを取得（データ読出し用）
@@ -16,9 +16,9 @@ function ReadData(member) {
                                       .replace('${nowMonth}', nowMonth));
   
   // 翌月の月のシート情報を取得
-  const nextDate = new Date();                                          // 日付を取得
-  nextDate.setDate(nextDate.getDate() + 1);                             // 明日の日付をセット
-  const nextMonth = Utilities.formatDate(nextDate, 'Asia/Tokyo', 'M');  // 明日の月を取得
+  const nextDate = new Date();                                           // 日付を取得
+  nextDate.setDate(nextDate.getDate() + 1);                              // 明日の日付をセット
+  const nextMonth = Utilities.formatDate(nextDate, 'Asia/Tokyo', 'M');   // 明日の月を取得
   const nextSchedule  = ssGet.getSheetByName('${period}期${nextMonth}月'
                                       .replace('${period}', period)
                                       .replace('${nextMonth}', nextMonth));
