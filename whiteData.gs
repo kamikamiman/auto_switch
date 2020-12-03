@@ -53,16 +53,15 @@ function WhiteData(member, totalContents) {
   const saturday = dayOfNum === 6;  // 土曜日判定
   const sunday   = dayOfNum === 0;  // 日曜日判定
   
-  // 在席 ・ 帰宅判定
+  // 「在席」への切替判定
   const attend  = [ '', '24H', '当番' ];        // 在席判定
-  const goHome  = [ '', '24H', '当番', '外出' ]; // 帰宅判定
   
   // 直近の予定
   let detail;
   
   
   // 出社時に当日の在席状態を書込
-  if ( nowTime < 10 ) {
+  if ( nowTime < 9 ) {
     
     // 予定無し ・ 24H ・ 当番 の場合、 「在席」を書込
     attend.forEach( el => {
@@ -88,19 +87,21 @@ function WhiteData(member, totalContents) {
   // 帰宅時に翌日の在席状態を書込
   if ( nowTime > 16 ) {
     
-    // 翌日の予定が 予定無し ・ 24H ・ 当番 ・ 外出 の場合、 在席リストの状態が外出中でなければ、「帰宅」 を書込
-    goHome.forEach( el => {
-      if ( nextContents === el && setContents !== '休み' && setContents !== '外出中' ) {
-      
-         setContents = attendList.getRange(rowNum, 5, 1, 1).setValue('帰宅');
-      };
+    // 翌日の予定が出張以外で、在席リストの状態が外出中でなければ、「帰宅」 を書込
+    if ( nextContents === !nextBusinessTrip || setContents !== '外出中' ) {
+      setContents = attendList.getRange(rowNum, 5, 1, 1).setValue('帰宅');
+    };
     
     // 翌日の予定が 休み の場合、[ 日付 + 休み ] を詳細項目に書込
     const dateHol = `${nextDate} 休み`;
     if ( nextholJudg ) detail = attendList.getRange(rowNum, 6, 1, 1).setValue(dateHol);
     
-    });
 
+    // 翌日の予定が 出張 の場合、詳細項目に書込
+    if ( nextBusinessTrip ) {
+      setContents = attendList.getRange(rowNum, 5, 1, 1).setValue('出張中');
+      detail = attendList.getRange(rowNum, 6, 1, 1).setValue(nextContents);
+    }
     // 翌日の休日判定がtrueの場合、「休み」を書込
     if ( nextholJudg ) setContents = attendList.getRange(rowNum, 5, 1, 1).setValue('休み');
 
@@ -112,7 +113,26 @@ function WhiteData(member, totalContents) {
   };
   
 
+  // 期間限定で発動(iサーチ打ち合わせ開始)
+  if ( nowTime == 10 ) {
 
+    if ( setContents === '在席' ) {
+      setContents = attendList.getRange(rowNum, 5, 1, 1).setValue('会議中');
+      if ( detail !== '' ) detail = attendList.getRange(rowNum, 6, 1, 1).setValue('10 ~ 11時')
+    }
+    
+  }
+
+
+  // 期間限定で発動(iサーチ打ち合わせ終了)
+  if ( nowTime == 11 ) {
+
+    if ( setContents === '会議中' ) {
+      setContents = attendList.getRange(rowNum, 5, 1, 1).setValue('在席');
+      if ( detail !== '' ) detail = attendList.getRange(rowNum, 6, 1, 1).setValue('')
+    }
+
+  }
 
 
 }

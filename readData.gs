@@ -31,7 +31,7 @@ function ReadData(member) {
   const days = _days.getValues().flat();                        // 日付情報を取得(配列)
   
   // 本日の日付のセルの列番号を取得
-  let nowDayNum = 2; // 列番号
+  let nowDayNum = 2; // 列番号(初期値)
   let dayNum;        // 本日の日付の列番号
   days.forEach( getDay => {
      const day = Utilities.formatDate(getDay, 'Asia/Tokyo', 'M/d');
